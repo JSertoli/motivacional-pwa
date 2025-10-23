@@ -28,28 +28,27 @@ export default function App() {
   }
 
   async function handleSubmit(e: React.FormEvent) {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!author.trim() || !content.trim()) {
-    alert("Preencha o autor e a mensagem antes de enviar!");
-    return;
+    if (!author.trim() || !content.trim()) {
+      alert("Preencha o autor e a mensagem antes de enviar!");
+      return;
+    }
+
+    try {
+      await api.post("/messages", {
+        author,
+        content,
+        authorToken: localStorage.getItem("authorToken"),
+      });
+      setAuthor("");
+      setContent("");
+      fetchMessages();
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao publicar a mensagem!");
+    }
   }
-
-  try {
-    await api.post("/messages", {
-      author,
-      content,
-      authorToken: localStorage.getItem("authorToken"),
-    });
-    setAuthor("");
-    setContent("");
-    fetchMessages();
-  } catch (error) {
-    console.error(error);
-    alert("Erro ao publicar a mensagem!");
-  }
-}
-
 
   return (
     <div className="container">
