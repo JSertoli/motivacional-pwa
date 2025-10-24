@@ -1,72 +1,35 @@
-import { useState } from "react";
-import api from "../api";
-
-interface Message {
-  id: number;
-  content: string;
-  author: string;
-  authorToken: string;
-}
+import api from "../api/api";
+import { Message, User } from "../types";
 
 interface Props {
   message: Message;
-  onUpdated: () => void;
+  currentUser: User;
+  onChange: () => void;
 }
 
-export default function MessageCard({ message, onUpdated }: Props) {
-  const [editing, setEditing] = useState(false);
-  const [newContent, setNewContent] = useState(message.content);
-
-  const localToken = localStorage.getItem("authorToken");
-
-  async function handleUpdate() {
-    try {
-      await api.put(`/messages/${message.id}`, {
-        content: newContent,
-        authorToken: localToken,
-      });
-      setEditing(false);
-      onUpdated();
-    } catch {
-      alert("Você não tem permissão para editar esta mensagem.");
-    }
-  }
+export default function MessageCard({ message, currentUser, onChange }: Props) {
+  const isOwner = message.user.id === currentUser.id;
 
   async function handleDelete() {
-  try {
-    await api.delete(`/messages/${message.id}`, {
-      data: { authorToken: localToken },
-    });
-    onUpdated();
-  } catch {
-    alert("Você não tem permissão para excluir esta mensagem.");
+    // eslint-disable-next-line no-restricted-globals
+    if (!confirm("Deseja excluir essa mensagem?")) return;
+    await api.delete(`/messages/${message.id}`);
+    onChange();
   }
-}
 
   return (
-    <div className="card">
-      {editing ? (
-        <>
-          <textarea
-            value={newContent}
-            onChange={(e) => setNewContent(e.target.value)}
-          />
-          <button onClick={handleUpdate}>Salvar</button>
-          <button onClick={() => setEditing(false)}>Cancelar</button>
-        </>
-      ) : (
-        <>
-          <p>{message.content}</p>
-          <small>— {message.author}</small>
-          {localToken === message.authorToken && (
-            <>
-                <button onClick={() => setEditing(true)} style={{ marginLeft: "10px", marginRight: "8px" }}>
-                    Editar
-                </button>
-                <button onClick={handleDelete}>Excluir</button>
-            </>
-            )}
-        </>
+    <div className="bg-white p-4 rounded-lg shadow">
+      <p className="text-gray-800">{message.content}</p>
+      <p className="text-sm text-gray-500 mt-1">
+        <b>{message.user.name}</b> • {message.category.name}
+      </p>
+      {isOwner && (
+        <button
+          onClick={handleDelete}
+          className="mt-3 bg-red-500 text-white px-3 py-1 rounded"
+        >
+          Excluir
+        </button>
       )}
     </div>
   );
