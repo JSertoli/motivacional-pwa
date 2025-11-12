@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
+import Register from "./pages/Register";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -23,6 +24,7 @@ export default function App() {
             )
           }
         />
+        <Route path="/register" element={<Register />} />
         <Route
           path="/home"
           element={user ? <Home setUser={setUser} /> : <Navigate to="/" />}

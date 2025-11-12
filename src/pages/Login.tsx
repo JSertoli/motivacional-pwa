@@ -7,23 +7,21 @@ interface LoginProps {
   onLogin: (user: any) => void;
 }
 
+// TODO: Create page to update user credentials
 export default function Login({ onLogin }: LoginProps) {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   async function handleLogin() {
-    if (!name || !email) return alert("Preencha todos os campos");
-
     try {
-      const res = await api.post("/users", { name, email });
-      if (!res.data?.id) return alert("Erro ao receber dados do usuário");
-
-      localStorage.setItem("user", JSON.stringify(res.data));
-      onLogin(res.data); // atualiza o estado no App
+      const res = await api.post("/users/login", { email, password });
+      const { token, user } = res.data;
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      onLogin(user);
       navigate("/home");
-    } catch (e) {
-      console.log(e);
+    } catch (err) {
       alert("Erro ao fazer login");
     }
   }
@@ -32,17 +30,30 @@ export default function Login({ onLogin }: LoginProps) {
     <div className="login-page">
       <div className="login-card">
         <h1>Motivacional Network 💬</h1>
-        <input
-          placeholder="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+
         <input
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <input
+          type="password"
+          placeholder="Senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
         <button onClick={handleLogin}>Entrar</button>
+
+        <p style={{ marginTop: "1rem" }}>
+          Ainda não tem uma conta?{" "}
+          <span
+            style={{ color: "blue", cursor: "pointer" }}
+            onClick={() => navigate("/register")}
+          >
+            Criar conta
+          </span>
+        </p>
       </div>
     </div>
   );

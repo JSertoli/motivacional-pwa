@@ -22,7 +22,6 @@ export default function MessageForm({ user, categories, onCreated, allowEmptyCat
       await api.post("/messages", {
         text,
         categoryId: categoryId || null,
-        userId: user.id,
       });
       setText("");
       setCategoryId("");
