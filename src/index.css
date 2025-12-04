@@ -317,3 +317,118 @@ header button:hover {
     font-size: 1.75rem;
   }
 }
+
+
+/* Container geral da página */
+.account-container {
+  padding: 3rem;
+}
+
+.account-container h1 {
+  font-size: 2.3rem;
+  margin-bottom: 2rem;
+  color: #6b21a8;
+}
+
+/* Card central */
+.account-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Seção de dados */
+.form-section label {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #6b21a8;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.inputs-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.inputs-row input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border-radius: 0.8rem;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.inputs-row input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.2);
+}
+
+/* Botões alinhados */
+.buttons-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.save-btn {
+  background: #7c3aed;
+  color: #fff;
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.save-btn:hover {
+  background: #6d28d9;
+}
+
+.delete-btn {
+  background: #ef4444;
+  color: #fff;
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
+}
+
+/* Botão voltar */
+.back-btn {
+  margin-top: 2rem;
+  background: #7c3aed;
+  padding: 0.6rem 1.4rem;
+  border-radius: 0.6rem;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.back-btn:hover {
+  background: #6d28d9;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .inputs-row {
+    flex-direction: column;
+  }
+
+  .buttons-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

@@ -18,6 +18,8 @@ export default function Login({ onLogin }: LoginProps) {
       const res = await api.post("/users/login", { email, password });
       const { token, user } = res.data;
       localStorage.setItem("token", token);
+      console.log(user);
+      
       localStorage.setItem("user", JSON.stringify(user));
       onLogin(user);
       navigate("/home");

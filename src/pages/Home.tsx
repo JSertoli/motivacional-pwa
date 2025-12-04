@@ -25,7 +25,7 @@ export default function Home({ setUser }: HomeProps) {
   useEffect(() => {
     if (!user) navigate("/"); // Redireciona se não houver login
     else loadData();
-  }, []);
+  }, [user, navigate]);
 
   async function loadData() {
     try {
@@ -86,10 +86,10 @@ export default function Home({ setUser }: HomeProps) {
   }
 
   // Salvar edição
-  async function saveEdit(messageId: number) {
+  async function saveEdit(messageId: number, userId: number) {
     if (!editingText.trim()) return alert("Digite algo para atualizar a mensagem");
     try {
-      await api.put(`/messages/${messageId}`, { content: editingText });
+      await api.put(`/messages/${messageId}/${userId}`, { content: editingText });
       setEditingMessageId(null);
       setEditingText("");
       loadData();
@@ -99,20 +99,38 @@ export default function Home({ setUser }: HomeProps) {
     }
   }
 
+  // Deletar mensagem
+  async function deleteMessage(messageId: number, userId: number) {
+    if (!window.confirm("Tem certeza que deseja excluir esta mensagem?")) return;
+
+    try {
+      await api.delete(`/messages/${messageId}/${userId}`);
+      loadData();
+    } catch (e) {
+      console.log(e);
+      alert("Erro ao deletar mensagem");
+    }
+  }
+
+
   return (
     <div className="container">
       {/* Header */}
       <header>
         <h2>Olá, {user?.name || "Usuário"}! ✨</h2>
-        <button
-            onClick={() => {
-            localStorage.removeItem("user");
-            setUser(null); // <- atualiza o state global
-            navigate("/");  // redireciona
-            }}
-        >
-            Sair
-        </button>
+        <div>
+          <button
+              onClick={() => {
+              localStorage.removeItem("user");
+              setUser(null); // <- atualiza o state global
+              navigate("/");  // redireciona
+              }}
+          >
+              Sair
+          </button>
+          <span style={{ margin: "0 1rem", color: "#ccc" }}>|</span>
+          <button onClick={() => navigate("/settings")}>Configurações</button>
+        </div>
         </header>
 
 
@@ -161,20 +179,41 @@ export default function Home({ setUser }: HomeProps) {
                   style={{ width: "100%", marginBottom: "0.5rem", borderRadius: "0.5rem", padding: "0.5rem" }}
                 />
                 <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button onClick={() => saveEdit(msg.id)}>Salvar</button>
+                  <button onClick={() => saveEdit(msg.id, user!.id)}>Salvar</button>
                   <button onClick={cancelEditing} style={{ backgroundColor: "#ccc", color: "#000" }}>Cancelar</button>
                 </div>
               </>
             ) : (
               <>
                 <MessageCard message={msg} currentUser={user!} onChange={loadData} />
-                {msg.user.id === user!.id && (
-                  <button
-                    onClick={() => startEditing(msg)}
-                    style={{ marginTop: "0.5rem", fontSize: "0.85rem", color: "#7c3aed", background: "none", border: "none", cursor: "pointer" }}
-                  >
-                    Editar
-                  </button>
+                {(msg.user.id === user!.id || user!.role === "ADMIN") && (
+                  <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+                    <button
+                      onClick={() => startEditing(msg)}
+                      style={{
+                        fontSize: "0.85rem",
+                        color: "#7c3aed",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Editar
+                    </button>
+
+                    <button
+                      onClick={() => deleteMessage(msg.id, user!.id)}
+                      style={{
+                        fontSize: "0.85rem",
+                        color: "red",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Deletar
+                    </button>
+                  </div>
                 )}
               </>
             )}

@@ -18,7 +18,7 @@ export default function Register() {
       alert("Usuário cadastrado com sucesso!");
       navigate("/"); // volta para tela de login
     } catch (err: any) {
-    console.log(err);
+      console.log(err);
       if (err.response?.status === 409)
         alert("Email já cadastrado");
       else alert("Erro ao cadastrar usuário");

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3030",
+  baseURL: "https://api-motivacional-network-gpo7r1a3e-jsertolis-projects.vercel.app",
 });
 
 api.interceptors.request.use((config) => {

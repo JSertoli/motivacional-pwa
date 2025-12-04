@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
+import UserSettings from "./pages/UserSettings";
 
 export default function App() {
   const [user, setUser] = useState(() => {
@@ -29,6 +30,7 @@ export default function App() {
           path="/home"
           element={user ? <Home setUser={setUser} /> : <Navigate to="/" />}
         />
+        <Route path="/settings" element={user ? <UserSettings setPropUser={setUser}/> : <Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
