@@ -22,6 +22,11 @@ export default function MessageForm({ user, categories, onCreated, allowEmptyCat
       await api.post("/messages", {
         text,
         categoryId: categoryId || null,
+      }, 
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
       setText("");
       setCategoryId("");

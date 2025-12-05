@@ -50,7 +50,11 @@ export default function Home({ setUser }: HomeProps) {
       };
       if (selectedCategory) payload.categoryId = selectedCategory;
 
-      await api.post("/messages", payload);
+      await api.post("/messages", payload, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       setText("");
       setSelectedCategory("");
@@ -65,7 +69,11 @@ export default function Home({ setUser }: HomeProps) {
   async function handleCreateCategory() {
     if (!newCategory.trim()) return alert("Digite o nome da categoria");
     try {
-      const res = await api.post("/categories", { name: newCategory });
+      const res = await api.post("/categories", { name: newCategory }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setCategories([...categories, res.data]);
       setNewCategory("");
     } catch {
@@ -89,7 +97,11 @@ export default function Home({ setUser }: HomeProps) {
   async function saveEdit(messageId: number, userId: number) {
     if (!editingText.trim()) return alert("Digite algo para atualizar a mensagem");
     try {
-      await api.put(`/messages/${messageId}/${userId}`, { content: editingText });
+      await api.put(`/messages/${messageId}/${userId}`, { content: editingText }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setEditingMessageId(null);
       setEditingText("");
       loadData();
@@ -104,7 +116,11 @@ export default function Home({ setUser }: HomeProps) {
     if (!window.confirm("Tem certeza que deseja excluir esta mensagem?")) return;
 
     try {
-      await api.delete(`/messages/${messageId}/${userId}`);
+      await api.delete(`/messages/${messageId}/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       loadData();
     } catch (e) {
       console.log(e);
@@ -186,7 +202,7 @@ export default function Home({ setUser }: HomeProps) {
             ) : (
               <>
                 <MessageCard message={msg} currentUser={user!} onChange={loadData} />
-                {(msg.user.id === user!.id || user!.role === "ADMIN") && (
+                {(msg.user.id === user!.id) && (
                   <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
                     <button
                       onClick={() => startEditing(msg)}
@@ -200,19 +216,21 @@ export default function Home({ setUser }: HomeProps) {
                     >
                       Editar
                     </button>
-
-                    <button
-                      onClick={() => deleteMessage(msg.id, user!.id)}
-                      style={{
-                        fontSize: "0.85rem",
-                        color: "red",
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Deletar
-                    </button>
+                    
+                    {(user!.role === "ADMIN") && (
+                      <button
+                        onClick={() => deleteMessage(msg.id, user!.id)}
+                        style={{
+                          fontSize: "0.85rem",
+                          color: "red",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Deletar
+                      </button>
+                    )}
                   </div>
                 )}
               </>

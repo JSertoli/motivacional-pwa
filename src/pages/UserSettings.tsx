@@ -25,7 +25,7 @@ export default function UserSettings({ setPropUser }: UserSettingsProps) {
     setUser(parsed);
     setName(parsed.name);
     setEmail(parsed.email);
-  }, [user, navigate]);
+  }, [navigate]);
 
   async function handleUpdate() {
     try {
