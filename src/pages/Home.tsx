@@ -202,8 +202,8 @@ export default function Home({ setUser }: HomeProps) {
             ) : (
               <>
                 <MessageCard message={msg} currentUser={user!} onChange={loadData} />
-                {(msg.user.id === user!.id) && (
                   <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+                {(msg.user.id === user!.id) && (
                     <button
                       onClick={() => startEditing(msg)}
                       style={{
@@ -216,8 +216,8 @@ export default function Home({ setUser }: HomeProps) {
                     >
                       Editar
                     </button>
-                    
-                    {(user!.role === "ADMIN") && (
+                  )}
+                  {(user!.role === "ADMIN") && (
                       <button
                         onClick={() => deleteMessage(msg.id, user!.id)}
                         style={{
@@ -230,9 +230,8 @@ export default function Home({ setUser }: HomeProps) {
                       >
                         Deletar
                       </button>
-                    )}
+                      )}
                   </div>
-                )}
               </>
             )}
           </div>
